@@ -4,6 +4,9 @@
 
 @section('content')
     <article class="rounded-lg border border-blue-100 bg-white p-6 shadow-sm">
+        @if ($article->image_path) 
+            <img src="{{ asset( 'storage/' . $article->image_path) }}" alt="記事の画像" class="mb-6 w-full rounded-lg">
+        @endif
         <time class="text-sm text-blue-600">
             {{ $article->published_on->format('Y年n月j日') }}
         </time>

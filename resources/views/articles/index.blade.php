@@ -25,6 +25,11 @@
             @foreach ($articles as $article)
                 <a href="{{ route('articles.show', $article) }}"
                    class="block rounded-lg border border-blue-100 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md">
+                    @if ($article->image_path)
+                        <img src="{{ asset('storage/' . $article->image_path) }}" alt="記事の画像" class="mb-4 w-full rounded-lg">
+                        
+                    @endif
+
                     <time class="text-sm text-blue-600">
                         {{ $article->published_on->format('Y年n月j日') }}
                     </time>
