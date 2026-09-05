@@ -46,7 +46,15 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'published_on' => 'required|date',
             'body' => 'required|string',
+            'image' => 'nullable|file|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $validated['image_path'] = str_replace('public/', 'storage/', $imagePath);
+        }
+
+        unset ($validated['image']); // 画像パスを除外して保存
 
         Article::create($validated);
 
@@ -66,8 +74,21 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'published_on' => 'required|date',
+            'image' => 'nullable|file|max:2048',
             'body' => 'required|string',
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($article->image_path) {
+                // 既存の画像を削除
+                $existingImagePath = str_replace('storage/', 'public/', $article->image_path);
+                \Storage::disk('public')->delete($existingImagePath);
+            }
+            $imagePath = $request->file('image')->store('images', 'public');
+            $validated['image_path'] = str_replace('public/', 'storage/', $imagePath);
+        }
+
+        unset($validated['image']); // 画像パスを除外して保存
 
         $article->update($validated);
 
